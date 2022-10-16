@@ -4,7 +4,7 @@ This is a simple fork of [mapbox/togeojson](https://github.com/mapbox/togeojson)
 
 Although I use `.gpx` traces exclusively I have modified the section dealing with `.kml` to generate the same output. It's only been casually tested.
  
-Processing the largish GPX trace from [`test/data/osm.gpx`](./test/data)–
+Processing the largish GPX trace from [`test/data/osm.gpx`](./test/data/osm.gpx)–
 ```
 ./togeojson test/data/osm.gpx > with.json
 ./togeojson -n=true test/data/osm.gpx > without.json
