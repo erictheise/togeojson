@@ -101,7 +101,7 @@ var toGeoJSON = (function() {
     }
 
     var t = {
-        kml: function(doc) {
+        kml: function(doc, noCoordTimes) {
 
             var gj = fc(),
                 // styleindex keeps track of hashed styles in order to match features
@@ -294,8 +294,12 @@ var toGeoJSON = (function() {
                     properties.visibility = nodeVal(visibility);
                 }
                 if (geomsAndTimes.coordTimes.length) {
-                    properties.coordTimes = (geomsAndTimes.coordTimes.length === 1) ?
-                        geomsAndTimes.coordTimes[0] : geomsAndTimes.coordTimes;
+                    if (noCoordTimes) {
+                        properties.coordTimes = []
+                    } else {
+                        properties.coordTimes = (geomsAndTimes.coordTimes.length === 1) ?
+                          geomsAndTimes.coordTimes[0] : geomsAndTimes.coordTimes;
+                    }
                 }
                 var feature = {
                     type: 'Feature',
@@ -310,7 +314,7 @@ var toGeoJSON = (function() {
             }
             return gj;
         },
-        gpx: function(doc) {
+        gpx: function(doc, noCoordTimes) {
             var i,
                 tracks = get(doc, 'trk'),
                 routes = get(doc, 'rte'),
@@ -385,7 +389,9 @@ var toGeoJSON = (function() {
                 if (track.length === 0) return;
                 var properties = getProperties(node);
                 extend(properties, getLineStyle(get1(node, 'extensions')));
-                if (times.length) properties.coordTimes = track.length === 1 ? times[0] : times;
+                if (times.length) {
+                    noCoordTimes? properties.coordTimes = [] : properties.coordTimes = track.length === 1 ? times[0] : times;
+                }
                 if (heartRates.length) properties.heartRates = track.length === 1 ? heartRates[0] : heartRates;
                 return {
                     type: 'Feature',
